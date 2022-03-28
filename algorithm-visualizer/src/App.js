@@ -5,17 +5,19 @@ import Caesar from './Components/Caesar';
 import Blowfish from './Components/Blowfish';
 import { BrowserRouter as Router} from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
+import AlgoNavBar from './Components/AlgoNavBar'
 function App() {
   return (
-    <><Router>
+    <><AlgoNavBar></AlgoNavBar><Router>
       <div className="App">
         <Routes>
-          <Route path='/caesar' component={Caesar} />
-          <Route path='/blowfish' component={Blowfish} />
-          <Route path='/' component={Home} />
+          <Route path='/caesar' element={<Caesar />} />
+          <Route path='/blowfish' element={<Blowfish />} />
+          <Route path='/' element={<Home />} />
         </Routes>
+
       </div>
-    </Router><Home></Home></>
+    </Router></>
   );
 }
 
