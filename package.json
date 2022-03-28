@@ -1,0 +1,21 @@
+{
+  "name": "cnt5412_project",
+  "version": "1.0.0",
+  "description": "React App with visual representations of Encryption Algorithm(s)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samuel14920/CNT5412_Project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samuel14920/CNT5412_Project/issues"
+  },
+  "homepage": "https://github.com/samuel14920/CNT5412_Project#readme",
+  "dependencies": {
+  }
+}
