@@ -17,5 +17,6 @@
   },
   "homepage": "https://github.com/samuel14920/CNT5412_Project#readme",
   "dependencies": {
+    "react-router-dom": "^6.2.2"
   }
 }
