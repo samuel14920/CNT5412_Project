@@ -1,6 +1,5 @@
 .main_bar {
-  background-color: #18bdcc;
-  border-width: 0.125em;
-  border-color: rgb(0, 0, 0);
-  border-style: solid;
+  /* background-color: #18bdcc; */
+  background-color: rgb(22, 236, 236);
+  border-bottom: 0.125em solid black;
 }
