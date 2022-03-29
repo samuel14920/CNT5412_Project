@@ -9,7 +9,7 @@ import AlgoNavBar from './Components/AlgoNavBar'
 function App() {
   return (
     <><AlgoNavBar></AlgoNavBar><Router>
-      <div className="App">
+      <div className="App" >
         <Routes>
           <Route path='/caesar' element={<Caesar />} />
           <Route path='/blowfish' element={<Blowfish />} />
