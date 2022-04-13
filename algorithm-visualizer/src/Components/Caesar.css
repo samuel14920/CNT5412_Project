@@ -1,3 +1,11 @@
 Image {
   height: fit-content;
 }
+.form-control:focus {
+  outline: none !important;
+  outline-offset: none !important;
+  box-shadow: none;
+}
+.form-control{
+  border: 0.125em solid black;
+}
