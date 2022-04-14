@@ -21,6 +21,7 @@ const AlgoNavBar = () => {
           <Nav className="me-auto">
               <Nav.Link href="/">Home</Nav.Link>
               <Nav.Link href="/caesar">Caesar Cipher</Nav.Link>
+              <Nav.Link href="/vigenere">Vigenere Cipher</Nav.Link>
               <Nav.Link href="/des">DES</Nav.Link>
               <Nav.Link href="/blowfish">Blowfish</Nav.Link>
               <Nav.Link href="/ecb">Block ECB</Nav.Link>

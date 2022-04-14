@@ -2,6 +2,7 @@
 import './App.css';
 import Home from './Components/Home';
 import Caesar from './Components/Caesar';
+import Vigenere from './Components/Vigenere';
 import Blowfish from './Components/Blowfish';
 import { BrowserRouter as Router} from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
@@ -12,6 +13,7 @@ function App() {
       <div className="App" >
         <Routes>
           <Route path='/caesar' element={<Caesar />} />
+          <Route path='/vigenere' element={<Vigenere />} />
           <Route path='/blowfish' element={<Blowfish />} />
           <Route path='/' element={<Home />} />
         </Routes>
