@@ -94,13 +94,6 @@ function Blowfish() {
     for(let i = 0; i < 18; i++){
             P[i] = P[i] ^ key[i % 14];
           }
-        // # c = 0
-        // # for i in range(0, 18):
-        // #     base = 0
-        // #     for j in range(0, 4):
-        // #         base = (base << 8) | int(str(key)[c: c + 8])  # & (2**8 - 1)
-        // #         c = (c + 1) % len(str(key))
-        // #     P[i] ^= base
 
         //# 521 iteration subkey calculation
         let left, right = 0;
@@ -173,7 +166,6 @@ function Blowfish() {
                 value={plaintext}
                 aria-describedby="passwordHelpBlock"
                 onChange={event => setNewPlainText(event.target.value)}
-                //onChange={Encrypt( CalculateCaesar(this.state.value ), }
               />
               <Form.Label htmlFor="inputPassword5">Enter The Key Here (14 Max)</Form.Label>
               <Form.Control
@@ -182,7 +174,6 @@ function Blowfish() {
                 id="inputPassword"
                 aria-describedby="passwordHelpBlock"
                 onChange={event => setKeyFromString(event.target.value)}
-                //onChange={Encrypt( CalculateCaesar(this.state.value ), }
               />
               <Row xs={4}sm={4}md={4}lg={4}xl={4}xxl={4} style={{ padding: "10px"}}>
               <Form.Text style={{float: "left", paddingRight:"10px"}} id="plaintextEntry" muted>
