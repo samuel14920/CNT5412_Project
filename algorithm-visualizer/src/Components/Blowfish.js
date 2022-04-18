@@ -9,41 +9,55 @@ import { useEffect, useState } from 'react';
 const data = require("./Blowfish_Data.js");
 let S= data.S; let P = data.P;
 function Blowfish() {
+  const [plaintext, setPlaintext] = useState("");
   const [ciphertext, setCiphertext] = useState("");
-  const [modulus, setModulus] = useState(0);
-  const [input, setInput] = useState("");
-
-  function encode(str) {
-    return str.replace(/./g, function(c) {
-        return ('00' + c.charCodeAt(0)).slice(-3);
-    });
-  }
-
-  function decode(str) {
-      return str.replace(/.{3}/g, function(c) {
-          return String.fromCharCode(c);
-      });
-  }
-
-  function text2Binary(string) {
-    return string.split('').map(function (char) {
-        return char.charCodeAt(0).toString(2);
-    }).join(' ');
-  }
-  function dec2bin(dec) {
-    return (dec >>> 0).toString(2);
-  }
+  const [decrypted, setDecrypted] = useState("");
+  const [leftInitial, setLeftInitial] = useState(0);const [rightInitial, setRightInitial] = useState(0);
+  const [leftEncrypted, setLeftEncrypted] = useState(0);const [rightEncrypted, setRightEncrypted] = useState(0);
+  const [key, setKey] = useState([0x77AFA1C5, 0x20756060,
+    0x85CBFE4E, 0x8AE88DD8, 0x7AAAF9B0, 0x4CF9AA7E,
+    0x1948C25C, 0x02FB8A8C, 0x01C36AE4, 0xD6EBE1F9,
+    0x90D4F869, 0xA65CDEA0, 0x3F09252D, 0xC208E69F]);
   
-  function CalculateCaesar(input, offset){
-    //console.log(data.S, data.P);
-    let alphabet = "abcdefghijklmnopqrstuvwxyz";
-    let result = ""; let shifted =''; let alphabet_index = 0;
-    for(let i = 0; i < input.length;  i++){
-      alphabet_index = alphabet.indexOf(input[i]);
-      shifted = alphabet.charAt((alphabet_index + offset) % 26);
-      result = result.concat(shifted);
+    useEffect(() => {
+      recalculate();
+    }, [plaintext, decrypted]);
+  function setKeyFromString(input){
+    let answer = []
+    for(let i = 0; i < input.length; i++){
+      answer.push(input.charCodeAt(i));
     }
-    setCiphertext(result);
+    while (answer.length < 14){
+      answer.push(0);
+    }console.log(answer)
+    setKey(answer); recalculate();
+  }
+  function setNewPlainText(input){
+    setPlaintext(input); recalculate();
+  }
+  function text2Binary(input) {
+    let output = "";
+    for (var i = 0; i < input.length; i++) {
+      let initial = input[i].charCodeAt(0).toString(2) + " "; //console.log(initial);
+      while( initial.length < 9){
+        initial = "0" + initial; //console.log(initial);
+      }
+      output += initial;
+    }
+    
+    return output;
+  }
+
+  function dec2bin(dec) {
+    let num = (dec >>> 0).toString(2); while(num.length % 8 != 0 ){num = "0"+num;}
+    let j = 0; console.log(num);
+    let ans = "";
+    for (let i = 0; i < num.length; i++){
+      if(i % 8 == 0 && i != 0){
+         ans += " ";}
+      ans += num.charAt(i);
+    }
+    return ans;
   }
 
   function f_function(n){
@@ -59,14 +73,14 @@ function Blowfish() {
             let temp = l; l = r; r = temp; //console.log(l, r);
         }
         let temp = l; l = r; r = temp;
-        r = r ^ P[16]; console.log(l);
+        r = r ^ P[16]; //console.log(l);
         l = l ^ P[17];
         return [l, r];
   }
 
   function Decrypt(l, r){
     for(let i = 17; i > 1; i--){
-          l = l^ P[i]; console.log(l);
+          l = l^ P[i]; //console.log(l);
           r = f_function(l) ^ r;
           let temp = l;l = r; r = temp; //console.log(l, r);
         }
@@ -106,42 +120,41 @@ function Blowfish() {
         }
   }
 
-  let key = [0x77AFA1C5, 0x20756060,
-          0x85CBFE4E, 0x8AE88DD8, 0x7AAAF9B0, 0x4CF9AA7E,
-          0x1948C25C, 0x02FB8A8C, 0x01C36AE4, 0xD6EBE1F9,
-          0x90D4F869, 0xA65CDEA0, 0x3F09252D, 0xC208E69F];
-  let plaintext = "Hello World";
-  //let plaintext_bytes = encode(plaintext);
-  let utf8Encode = new TextEncoder();
-  let plaintext_bytes = text2Binary(plaintext);
-  console.log(plaintext_bytes);
-  plaintext_bytes = plaintext_bytes.replace(/\s/g, '');
-  let left_string = (plaintext_bytes.substring(0,32)); let left_rep = parseInt(left_string, 2);console.log(left_rep);
-  let right_string = (plaintext_bytes.substring(32,64)); let right_rep = parseInt(right_string, 2);console.log(right_rep);
-  // console.log(left_string); console.log(right_string);
-  // console.log(plaintext_bytes);
-  //let binary_rep = parseInt(plaintext_bytes, 2);
-  // console.log(binary_rep);
-  // console.log(dec2bin(right_rep));
-  // console.log(encode(plaintext));
-  // console.log(key)
-  //console.log(int.from_bytes(plaintext_bytes, "big"));
-  //left_text = int.from_bytes(plaintext_bytes, "big") & (2 ^ 32 - 1);
-  //let left_text = plaintext_bytes & (2 ^ 32 - 1);
-  //right_text = int.from_bytes(plaintext_bytes, "big") << 32;
-  //let right_text = plaintext_bytes << 32;
-  console.log(left_rep, right_rep);
-  console.log(P);
-  Init_Subkeys(key); console.log(P);
-  let result = Encrypt(left_rep, right_rep);
-  let left = result[0]; let right = result[1];
-  console.log(left, right);
-  console.log(P)
-  let final = Decrypt(left, right);
-  left = final[0]; right = final[1];
-  console.log(left, right);
 
+  function recalculate(){
+    //get text to encrypt. remove spaces between binary for chars
+    let plaintext_bytes = text2Binary(plaintext); console.log(plaintext_bytes);
+    plaintext_bytes = plaintext_bytes.replace(/\s/g, ''); console.log(plaintext_bytes);
 
+    //convert to int representation
+    let left_string = (plaintext_bytes.substring(0,32)); let left_rep = parseInt(left_string, 2);console.log(left_rep); setLeftInitial(left_rep);
+    let right_string = (plaintext_bytes.substring(32,64)); let right_rep = parseInt(right_string, 2);console.log(right_rep); setRightInitial(right_rep);
+
+    Init_Subkeys(key); console.log(P);
+
+    let result = Encrypt(left_rep, right_rep);
+    //get both halves of encrypted text
+    let left = result[0]; let right = result[1]; setLeftEncrypted(left); setRightEncrypted(right);
+    let text_encrypted = left.toString() + right.toString(); setCiphertext(text_encrypted);
+
+    //decrypt text
+    let final = Decrypt(left, right);
+    left = final[0]; right = final[1];
+    console.log(left, right);
+
+    let left_bin = dec2bin(left); let right_bin = dec2bin(right); console.log(left_bin, right_bin);
+    let combined = left_bin +" "+ right_bin;
+
+    //split, turn binary back into string
+    let chars = combined.split(" ");
+    let decrypted_msg = ""
+    for(let i = 0; i < chars.length; i++){
+      decrypted_msg += String.fromCharCode(parseInt(chars[i], 2));
+    }
+    setDecrypted(decrypted_msg);
+  }
+
+  // let binary_final = parseInt(combined).toString(2); console.log(binary_final);
   return (
     <>
         <h4>Blowfish Cipher</h4>
@@ -152,34 +165,35 @@ function Blowfish() {
                 <Image style={{height: "30%"}} fluid src="https://thumbs.dreamstime.com/b/photo-prepared-blowfish-against-blurred-background-front-view-blow-fish-porcupine-fish-155353317.jpg" />
             </Col>
             <Col xs={8}sm={8}md={8}lg={8}xl={8}xxl={8}>
-              <Form.Label htmlFor="inputPassword5">Enter The Text to Encrypt here</Form.Label>
+              <Form.Label htmlFor="inputPassword5">Enter The Text to Encrypt here (8 Max)</Form.Label>
               <Form.Control
                 maxLength={8}
                 type="input"
                 id="inputPassword"
+                value={plaintext}
                 aria-describedby="passwordHelpBlock"
-                onChange={event => setInput(event.target.value)}
+                onChange={event => setNewPlainText(event.target.value)}
                 //onChange={Encrypt( CalculateCaesar(this.state.value ), }
               />
-              <Form.Label htmlFor="inputPassword5">Enter The Key Here</Form.Label>
+              <Form.Label htmlFor="inputPassword5">Enter The Key Here (14 Max)</Form.Label>
               <Form.Control
-                maxLength={8}
+                maxLength={14}
                 type="input"
                 id="inputPassword"
                 aria-describedby="passwordHelpBlock"
-                onChange={event => setInput(event.target.value)}
+                onChange={event => setKeyFromString(event.target.value)}
                 //onChange={Encrypt( CalculateCaesar(this.state.value ), }
               />
               <Row xs={4}sm={4}md={4}lg={4}xl={4}xxl={4} style={{ padding: "10px"}}>
               <Form.Text style={{float: "left", paddingRight:"10px"}} id="plaintextEntry" muted>
                 Initial Left Half
               </Form.Text>
-              <Form.Control readOnly={true} style={{width: "20%"}}type="number" value= {left_rep}/>
+              <Form.Control readOnly={true} style={{width: "25%"}}type="number" value= {leftInitial}/>
 
               <Form.Text style={{float: "left", paddingRight:"10px"}} id="plaintextEntry" muted>
                 Initial Right Half
               </Form.Text>
-              <Form.Control readOnly={true} style={{width: "20%"}}type="number" value= {right_rep} />
+              <Form.Control readOnly={true} style={{width: "25%"}}type="number" value= {rightInitial} />
               </Row>
 
               <Form.Text id="plaintextEntry" muted>
@@ -196,12 +210,12 @@ function Blowfish() {
               <Form.Text style={{float: "left", paddingRight:"10px"}} id="plaintextEntry" muted>
                 Encrypted Left Half
               </Form.Text>
-              <Form.Control readOnly={true} style={{width: "20%"}}type="number" value= {left_rep}/>
+              <Form.Control readOnly={true} style={{width: "25%"}}type="number" value= {leftEncrypted}/>
 
               <Form.Text style={{float: "left", paddingRight:"10px"}} id="plaintextEntry" muted>
                 Encrypted Right Half
               </Form.Text>
-              <Form.Control readOnly={true} style={{width: "20%"}}type="number" value= {right_rep} />
+              <Form.Control readOnly={true} style={{width: "25%"}}type="number" value= {rightEncrypted} />
               </Row>
 
               <Form.Text id="plaintextEntry" muted>
@@ -210,7 +224,7 @@ function Blowfish() {
               <Form.Control
                 readOnly={true}
                 type="input"
-                value= {ciphertext}
+                value= {decrypted}
                 id="EncryptedPassword"
                 aria-describedby="passwordHelpBlock"
               />
