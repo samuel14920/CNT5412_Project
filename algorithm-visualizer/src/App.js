@@ -2,6 +2,7 @@
 import './App.css';
 import Home from './Components/Home';
 import Caesar from './Components/Caesar';
+import DES from './Components/DES';
 import Vigenere from './Components/Vigenere';
 import Blowfish from './Components/Blowfish';
 import { BrowserRouter as Router} from 'react-router-dom';
@@ -12,6 +13,7 @@ function App() {
     <><AlgoNavBar></AlgoNavBar><Router>
       <div className="App" >
         <Routes>
+          <Route path='/des' element={<DES />} />
           <Route path='/caesar' element={<Caesar />} />
           <Route path='/vigenere' element={<Vigenere />} />
           <Route path='/blowfish' element={<Blowfish />} />
