@@ -9,6 +9,11 @@ import Form from 'react-bootstrap/Form'
 import { useEffect, useState } from 'react';
 const data = require("./Blowfish_Data.js");
 let S= data.S; let P = data.P;
+
+//DISCLAIMER
+
+//A GOOD CHUNK OF THIS IS AN IMITATION OF METHODS DESCRIBED ON WIKIPEDIA AND GEEKSFORGEEKS
+
 function DES() {
   const [plaintext, setPlaintext] = useState("567899ABCD654321");
   const [ciphertext, setCiphertext] = useState("");
@@ -59,9 +64,7 @@ function DES() {
         }
         return k;
     }
-    // function parseBinaryToBigInt(a) {
-    //   return BigInt('0b' + a);
-    // }
+
     function text2Binary(input) {
       let output = "";
       for (var i = 0; i < input.length; i++) {
@@ -74,24 +77,7 @@ function DES() {
       
       return output;
     }
-    // function hex2bin(str){
-    //   console.log(str)
-    //   if (str.length % 2) { str = '0' + str; }
 
-    //   var bn = BigInt('0x' + str);
-    //   console.log(bn)
-    //   var d = bn.toString(2);
-
-    //   console.log(d)
-    //   //let ans = parseInt(str, 16); console.log(ans)
-    //   let ans2 = d.toString(2).toUpperCase(); console.log(ans2)
-    //   return ans2;
-    // }
-    // function bin2hex(str){
-    //   let ans = parseInt(str, 2).toString(16).toUpperCase();
-    //   return ans; //1010101010111011000010010001100000100111001101101100110011011101
-    //               //1010101010111011000010010001100000100111001101101100110011011101
-    // }
     function hex2bin(s)
     {
       console.log(s)
@@ -251,16 +237,10 @@ function DES() {
                 for (let i = 0; i < 8; i++) {
                     let row = 2 * (Number(x[i * 6]) - Number('0')) + (Number(x[i * 6 + 5]) - Number('0'));
                     let col = 8 * (Number(x[i * 6 + 1]) - Number('0')) + 4 * (Number(x[i * 6 + 2]) - Number('0')) + 2 * (Number(x[i * 6 + 3]) - Number('0')) + (Number(x[i * 6 + 4]) - Number('0'));
-                    //console.log(row, col)
+
                     let val = S_Boxes[i][row][col]; //console.log(val)
                     op += op + val.toString(2)
-                    // op += String.fromCharCode(val / 8 + Number('0')); console.log(String.fromCharCode(val / 8 + Number('0')))
-                    // val = val % 8;
-                    // op += String.fromCharCode(val / 4 + Number('0'));
-                    // val = val % 4;
-                    // op += String.fromCharCode(val / 2 + Number('0'));
-                    // val = val % 2;
-                    // op += String.fromCharCode(val + Number('0'));
+
                 }
                 //console.log(op)
                 // Straight D-box
@@ -273,14 +253,12 @@ function DES() {
         
                 // Swapper
                 if (i != 15) {
-                    //swap(left, right);
                     let temp = left;
                     left = right;
                     right = temp;
                 }
                 console.log("Round", i + 1, " ", bin2hex(left), " ", bin2hex(right), " ", rk[i], '\n');
-                // cout << "Round " << i + 1 << " " << bin2hex(left) << " "
-                //      << bin2hex(right) << " " << rk[i] << endl;
+
             }
         
             // Combination
@@ -304,14 +282,6 @@ function DES() {
     function recalculate(){
         // pt is plain text
         let pt = plaintext.toUpperCase(); let key = K.toUpperCase();
-        /*cout<<"Enter plain text(in hexadecimal): ";
-        cin>>pt;
-        cout<<"Enter key(in hexadecimal): ";
-        cin>>key;*/
-    
-        // pt = "567899ABCD654321";
-        // key = "LLKU23162746RCWW";
-        // Key Generation
     
         // Hex to binary
         key = hex2bin(key);
@@ -364,7 +334,6 @@ function DES() {
     
             rkb.push(RoundKey);
             rk.push(bin2hex(RoundKey));
-            //rk.push(parseInt(RoundKey, 2));
         }
  
     console.log("\nEncryption:\n\n");
@@ -372,8 +341,7 @@ function DES() {
     console.log("\nCipher Text: ", cipher, '\n'); setCiphertext(cipher);
  
     console.log("\nDecryption\n\n");
-    //reverse(rkb.begin(), rkb.end());
-    //reverse(rk.begin(), rk.end());
+
     let reversed_rkb = rkb.reverse();
     let reversed_rk = rk.reverse();
     let text = encrypt(cipher, reversed_rkb, reversed_rk); setDecrypted(text);
@@ -406,7 +374,6 @@ function DES() {
                 type="input"
                 id="inputPassword"
                 aria-describedby="passwordHelpBlock"
-                //value={K}
                 onChange={event => setKeyFromString(event.target.value)}
               />
               <Form.Label htmlFor="inputPassword5">Initial Permutation (Hexadecimal, 16 chars )</Form.Label>
@@ -416,7 +383,6 @@ function DES() {
                 id="inputPassword"
                 aria-describedby="passwordHelpBlock"
                 value={initialPermutation}
-                //onChange={event => setKeyFromString(event.target.value)}
               />
               <Row xs={4}sm={4}md={4}lg={4}xl={4}xxl={4} style={{ padding: "10px"}}>
               <Form.Text style={{float: "left", paddingRight:"10px"}} id="plaintextEntry" muted>
@@ -440,18 +406,6 @@ function DES() {
                 id="EncryptedPassword"
                 aria-describedby="passwordHelpBlock"
               />
-              {/* <Row xs={4}sm={4}md={4}lg={4}xl={4}xxl={4} style={{ padding: "10px"}}>
-              <Form.Text style={{float: "left", paddingRight:"10px"}} id="plaintextEntry" muted>
-                Encrypted Left Half
-              </Form.Text>
-              <Form.Control readOnly={true} style={{width: "25%"}}type="number" value= {leftEncrypted}/>
-
-              <Form.Text style={{float: "left", paddingRight:"10px"}} id="plaintextEntry" muted>
-                Encrypted Right Half
-              </Form.Text>
-              <Form.Control readOnly={true} style={{width: "25%"}}type="number" value= {rightEncrypted} />
-              </Row> */}
-
               <Form.Text id="plaintextEntry" muted>
                 Decrypted
               </Form.Text>
@@ -462,7 +416,6 @@ function DES() {
                 id="EncryptedPassword"
                 aria-describedby="passwordHelpBlock"
               />
-              {/* <Image style={{height: "20%"}} fluid src="https://www.researchgate.net/profile/Marcelo-Lubaszewski/publication/220850878/figure/fig1/AS:394010326781952@1470950790085/Block-diagram-of-DES-algorithm.png" /> */}
             </Col>
         </Row>
         </Container>
